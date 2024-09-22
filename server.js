@@ -10,18 +10,23 @@ const path = require('path')
 const env = require("dotenv").config()
 const app = express()
 const static = require("./routes/static")
+const expressLayouts = require("express-ejs-layouts")
 
 /* ***********************
  * Routes
  *************************/
 app.use(static)
+app.set("view engine", "ejs")
+app.use(expressLayouts)
+app.use('/public', express.static(path.join(__dirname, 'public')));
+app.set("layout", "./layouts/layout")
 app.set('view engine', 'ejs');
 
 // Set the views directory
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', path.join(__dirname, 'views'))
 
 // Serve static files from the 'public' directory
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public')))
 
 
 /* ***********************
