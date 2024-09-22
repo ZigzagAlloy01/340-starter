@@ -200,5 +200,10 @@ footer {
     transform: translateY(-50%);
     text-align: center;
   }
+  #responsive{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+  }
 }
 
