@@ -1,0 +1,16 @@
+{
+    "sqltools.connections": [
+        {
+            "pgOptions": {
+                "ssl": {
+                    "rejectUnauthorized": true
+                }
+            },
+            "previewLimit": 50,
+            "server": "localhost",
+            "driver": "PostgreSQL",
+            "name": "backend340",
+            "connectString": "postgresql://backendcse_340:7G3ePgVRdbgNaS7c9rIgHtKlJzTLqyS2@dpg-crsbhvrtq21c73ddtvg0-a.ohio-postgres.render.com/backendcse_340"
+        }
+    ]
+}
