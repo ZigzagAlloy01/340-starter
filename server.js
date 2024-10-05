@@ -5,28 +5,38 @@
 /* ***********************
  * Require Statements
  *************************/
+
+
+
 const express = require("express")
 const path = require('path')
 const env = require("dotenv").config()
 const app = express()
 const static = require("./routes/static")
 const expressLayouts = require("express-ejs-layouts")
+const baseController = require("./controllers/baseController")
+const inventoryRoute = require("./routes/inventoryRoute")
+
+
 
 /* ***********************
  * Routes
  *************************/
 app.use(static)
-app.set("view engine", "ejs")
 app.use(expressLayouts)
-app.use('/public', express.static(path.join(__dirname, 'public')));
+app.use("/inv", inventoryRoute)
+app.use('/public', express.static(path.join(__dirname, 'public')))
+app.set("view engine", "ejs")
 app.set("layout", "./layouts/layout")
-app.set('view engine', 'ejs');
+app.set('view engine', 'ejs')
+app.get("/", baseController.buildHome)
 
 // Set the views directory
 app.set('views', path.join(__dirname, 'views'))
 
 // Serve static files from the 'public' directory
 app.use(express.static(path.join(__dirname, 'public')))
+
 
 
 /* ***********************
@@ -43,6 +53,3 @@ app.listen(port, () => {
   console.log(`app listening on ${host}:${port}`)
 })
 
-app.get("/", function(req, res) {
-  res.render("index", {title: "Home"})
-});
