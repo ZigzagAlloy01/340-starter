@@ -16,6 +16,7 @@ const static = require("./routes/static")
 const expressLayouts = require("express-ejs-layouts")
 const baseController = require("./controllers/baseController")
 const inventoryRoute = require("./routes/inventoryRoute")
+const utilities = require("./utilities/")
 
 
 
@@ -29,7 +30,11 @@ app.use('/public', express.static(path.join(__dirname, 'public')))
 app.set("view engine", "ejs")
 app.set("layout", "./layouts/layout")
 app.set('view engine', 'ejs')
-app.get("/", baseController.buildHome)
+app.get("/", utilities.handleErrors(baseController.buildHome))
+app.use(async (req, res, next) => {
+  next({status: 404, message: 'Sorry, we appear to have lost that page.'})
+})
+
 
 // Set the views directory
 app.set('views', path.join(__dirname, 'views'))
@@ -51,5 +56,16 @@ const host = process.env.HOST || 'localhost'
  *************************/
 app.listen(port, () => {
   console.log(`app listening on ${host}:${port}`)
+})
+
+app.use(async (err, req, res, next) => {
+  let nav = await utilities.getNav()
+  console.error(`Error at: "${req.originalUrl}": ${err.message}`)
+  if(err.status == 404){ message = err.message} else {message = 'Oh no! There was a crash. Maybe try a different route?'}
+  res.render("errors/error", {
+    title: err.status || 'Server Error',
+    message,
+    nav
+  })
 })
 

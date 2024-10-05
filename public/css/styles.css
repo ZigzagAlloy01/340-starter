@@ -115,13 +115,21 @@ h1, h2, h3 {
   height: fit-content;
 }
 
-h
-
 footer {
   background-color: #02b0d3;
   color: #fff;
   text-align: center;
   padding: 1rem;
+}
+
+#error {
+  margin: 2rem 0 2rem 0; 
+  text-align: center;
+  font-weight: bold;
+}
+
+#error img {
+  margin-bottom: 2rem;
 }
 
 @media (max-width: 46.8749rem) {
