@@ -30,15 +30,15 @@ Util.buildClassificationGrid = async function(data){
     grid = '<ul id="inv-display">'
     data.forEach(vehicle => { 
       grid += '<li>'
-      grid +=  '<a href="../../inv/detail/'+ vehicle.inv_id 
+      grid +=  '<a href="/inv/detail/'+ vehicle.inv_id 
       + '" title="View ' + vehicle.inv_make + ' '+ vehicle.inv_model 
-      + 'details"><img src="../public' + vehicle.inv_thumbnail 
+      + 'details"><img src="/public' + vehicle.inv_thumbnail 
       +'" alt="Image of '+ vehicle.inv_make + ' ' + vehicle.inv_model 
       +' on CSE Motors" /></a>'
       grid += '<div class="namePrice">'
       grid += '<hr />'
       grid += '<h2>'
-      grid += '<a href="../../inv/detail/' + vehicle.inv_id +'" title="View ' 
+      grid += '<a href="/inv/detail/' + vehicle.inv_id +'" title="View ' 
       + vehicle.inv_make + ' ' + vehicle.inv_model + ' details">' 
       + vehicle.inv_make + ' ' + vehicle.inv_model + '</a>'
       grid += '</h2>'
@@ -53,6 +53,19 @@ Util.buildClassificationGrid = async function(data){
   }
   return grid
 }
+
+Util.buildVehicleDetail = async function(vehicle) {
+  if (!vehicle) {
+      return '<p class="notice">Vehicle not found.</p>';
+  }
+  let detailHtml = '<div class="vehicle-detail">';
+  detailHtml += `<h1>${vehicle.inv_make} ${vehicle.inv_model}</h1>`;
+  detailHtml += `<img src="/public${vehicle.inv_thumbnail}" alt="Image of ${vehicle.inv_make} ${vehicle.inv_model}" />`;
+  detailHtml += `<p>Price: $${new Intl.NumberFormat('en-US').format(vehicle.inv_price)}</p>`;
+  detailHtml += `<p>${vehicle.inv_description || 'No description available.'}</p>`;
+  detailHtml += '</div>';
+  return detailHtml;
+};
 
 Util.handleErrors = fn => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next)
 

@@ -17,8 +17,7 @@ const expressLayouts = require("express-ejs-layouts")
 const baseController = require("./controllers/baseController")
 const inventoryRoute = require("./routes/inventoryRoute")
 const utilities = require("./utilities/")
-
-
+const invModel = require('./models/inventory-model')
 
 /* ***********************
  * Routes
