@@ -47,7 +47,7 @@ nav ul li a {
   color: #fff;
 }
 
-h1, h2, h3 {
+h1, .h2, h3 {
   text-align: center;
   margin: 1.5rem 0;
 }
@@ -152,6 +152,11 @@ footer {
   max-width: 80%;  
   max-height: 80%;
   object-fit: cover;
+}
+
+.vehicle-detail {
+  display: grid;
+  place-items: center;
 }
 
 @media (max-width: 36.875rem) {
