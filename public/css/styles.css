@@ -148,7 +148,7 @@ footer {
   text-align: center;
 }
 
-#inv-display li img {
+#inv-display li img, .vehicle-detail p {
   max-width: 80%;  
   max-height: 80%;
   object-fit: cover;
@@ -157,6 +157,11 @@ footer {
 .vehicle-detail {
   display: grid;
   place-items: center;
+}
+
+.vehicle-detail p {
+  margin: 2rem 0 2rem 0;
+  font-weight: bold;
 }
 
 @media (max-width: 36.875rem) {

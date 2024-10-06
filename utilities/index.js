@@ -54,15 +54,22 @@ Util.buildClassificationGrid = async function(data){
   return grid
 }
 
+function formatMiles(miles) {
+  return miles.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+
 Util.buildVehicleDetail = async function(vehicle) {
   if (!vehicle) {
       return '<p class="notice">Vehicle not found.</p>';
   }
   let detailHtml = '<div class="vehicle-detail">';
-  detailHtml += `<h1>${vehicle.inv_make} ${vehicle.inv_model}</h1>`;
+  detailHtml += `<h1>${vehicle.inv_year} ${vehicle.inv_make} ${vehicle.inv_model}</h1>`;
   detailHtml += `<img src="/public${vehicle.inv_thumbnail}" alt="Image of ${vehicle.inv_make} ${vehicle.inv_model}" />`;
+  detailHtml += `<p>${vehicle.inv_make} ${vehicle.inv_model} Details</p>`;
   detailHtml += `<p>Price: $${new Intl.NumberFormat('en-US').format(vehicle.inv_price)}</p>`;
-  detailHtml += `<p>${vehicle.inv_description || 'No description available.'}</p>`;
+  detailHtml += `<p>Description: ${vehicle.inv_description || 'No description available.'}</p>`;
+  detailHtml += `<p>Color: ${vehicle.inv_color || 'No color available.'}</p>`;
+  detailHtml += `<p>Miles: ${formatMiles(vehicle.inv_miles) || 'No miles available.'}</p>`;
   detailHtml += '</div>';
   return detailHtml;
 };

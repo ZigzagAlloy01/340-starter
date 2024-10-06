@@ -33,4 +33,12 @@ invCont.getVehicleById = async function(req, res) {
   })
 }
 
+invCont.triggerError = (req, res) => {
+  res.render("errors/error", {
+    title: err.status || 'Server Error',
+    message,
+    nav
+  })
+};
+
 module.exports = invCont
