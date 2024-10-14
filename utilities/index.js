@@ -54,6 +54,37 @@ Util.buildClassificationGrid = async function(data){
   return grid
 }
 
+Util.buildLogInView = async function(){
+  let grid
+  grid = '<form action="/account/login" method="POST">'
+  grid += '<label for="email">Email Address:</label>'
+  grid += '<input type="email" id="email" name="account_email" required>'
+  grid += '<label for="password">Password:</label>'
+  grid += '<input type="password" id="password" name="account_password " required>'
+  grid += '<span id="pswdBtn">Show Password</span>'
+  grid += '<button type="submit">Login</button>'
+  grid += '<p>No account? <a href="/account/signup">Sign up</a></p>'
+  grid += '</form>'
+  return grid
+}
+
+Util.buildSignUpView = async function(){
+  let grid
+  grid = '<form action="/account/signup" method="POST">'
+  grid += '<label for="account_firstname">First Name:</label>'
+  grid += '<input type="text" id="firstname" name="account_firstname" required>'
+  grid += '<label for="account_lastname">Last Name:</label>'
+  grid += '<input type="text" id="lastname" name="account_lastname" required>'
+  grid += '<label for="account_email">Email Address:</label>'
+  grid += '<input type="email" id="email" name="account_email" required>'
+  grid += '<label for="account_password">Password:</label>'
+  grid += '<input type="password" id="password" name="account_password" required>'
+  grid += '<span id="pswdBtn">Show Password</span>'
+  grid += '<button type="submit">Sign Up</button>'
+  grid += '</form>'
+  return grid
+}
+
 function formatMiles(miles) {
   return miles.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
