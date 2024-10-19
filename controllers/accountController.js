@@ -2,56 +2,60 @@ const accountModel = require('../models/account-model')
 const utilities = require('../utilities')
 
 async function buildLogin(req, res) {
-    const grid = await utilities.buildLogInView()
+    const grid_1 = await utilities.buildLogInView()
     let nav = await utilities.getNav()
-    res.render("./account/login", {
+    res.render("account/login", {
       title: "Login",
       nav,
-      grid,
+      grid_1,
     })
 }
 
 async function buildSignup(req, res) {
-const grid = await utilities.buildSignUpView()
-let nav = await utilities.getNav()
-res.render("./account/signup", {
-    title: "Sign Up",
-    nav,
-    grid,
-})
+  const grid_2 = await utilities.buildSignUpView()
+  let nav = await utilities.getNav()
+  res.render("account/signup", {
+      title: "Sign Up",
+      nav,
+      grid_2,
+      errors: null,
+  })
 }
 
 async function registerAccount(req, res) {
-    const grid = await utilities.buildLogInView()
-    let nav = await utilities.getNav()
-    const { account_firstname, account_lastname, account_email, account_password } = req.body
-  
-    const regResult = await accountModel.registerAccount(
-      account_firstname,
-      account_lastname,
-      account_email,
-      account_password
+
+  const { account_firstname, account_lastname, account_email, account_password } = req.body
+  const grid_1 = await utilities.buildLogInView()
+  let nav = await utilities.getNav()
+
+  const regResult = await accountModel.registerAccount(
+    account_firstname,
+    account_lastname,
+    account_email,
+    account_password
+  )
+
+  if (regResult) {
+    req.flash(
+      "notice",
+      `Congratulations, you're registered ${account_firstname}. Please log in.`
     )
-  
-    if (regResult) {
-      req.flash(
-        "notice",
-        `Congratulations, you\'re registered ${account_firstname}. Please log in.`
-      )
-      res.status(201).render("./account/login", {
-        title: "Login",
-        nav,
-        grid,
-      })
-    } else {
-      req.flash("notice", "Sorry, the registration failed.")
-      res.status(501).render("./account/signup", {
-        title: "Registration",
-        nav,
-        grid,
-      })
-    }
+    res.status(201).render("./account/login", {
+      title: "Login",
+      nav,
+      grid_1
+    })
+  } else {
+    const grid_2 = await utilities.buildSignUpView()
+    req.flash("notice", "Sorry, the registration failed.")
+    res.status(501).render("./account/signup", {
+      title: "Sign Up",
+      nav,
+      grid_2,
+      errors: null,
+    })
   }
+}
 
     /*CREATE TABLE IF NOT EXISTS public.account
 (
@@ -67,5 +71,5 @@ async function registerAccount(req, res) {
     If you look in the accounts table of the database, you'll see that the email is stored in the account_email field, while the password is stored in the account_password field.
 
 To apply this to the form, you would name the email input as name="account_email". By using this method, the form and database table locations match. The same idea applies to all form fields.*/
-  module.exports = { buildLogin, buildSignup, registerAccount}
 
+module.exports = { buildLogin, buildSignup, registerAccount}

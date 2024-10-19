@@ -1,13 +1,26 @@
 const passwordInput = document.getElementById('password')
-    const submitButton = document.querySelector('button[type="submit"]')
+const submitButton = document.querySelector('#submit-password')
 
-    submitButton.addEventListener('click', (event) => {
-      const password = passwordInput.value;
-      if (!validatePassword(password)) {
-        alert('Password must be at least 12 characters long and contain at least 1 capital letter, 1 number, and 1 special character.')
-        event.preventDefault()
-      }
-    })
+function validatePassword(password) {
+  const minLength = 12;
+  const hasUpperCase = /[A-Z]/.test(password);
+  const hasNumber = /[0-9]/.test(password);
+  const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+  
+  if (password.length >= minLength && hasUpperCase && hasNumber && hasSpecialChar) {
+    return true;
+  }
+  
+  return false;
+}
+
+submitButton.addEventListener('click', (event) => {
+  const password = passwordInput.value;
+  if (!validatePassword(password)) {
+    console.log("Type a correct password")
+  }
+})
+
 const pswdBtn = document.querySelector('#pswdBtn')
 pswdBtn.addEventListener("click", function() {
     const pswdInput = document.getElementById("password");

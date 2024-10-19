@@ -57,12 +57,12 @@ Util.buildClassificationGrid = async function(data){
 Util.buildLogInView = async function(){
   let grid
   grid = '<form action="/account/login" method="POST">'
-  grid += '<label for="email">Email Address:</label>'
+  grid += '<label for="account_email">Email Address:</label>'
   grid += '<input type="email" id="email" name="account_email" required>'
-  grid += '<label for="password">Password:</label>'
+  grid += '<label for="account_password">Password:</label>'
   grid += '<input type="password" id="password" name="account_password " required>'
   grid += '<span id="pswdBtn">Show Password</span>'
-  grid += '<button type="submit">Login</button>'
+  grid += '<button id="submit-password" type="submit">Login</button>'
   grid += '<p>No account? <a href="/account/signup">Sign up</a></p>'
   grid += '</form>'
   return grid
@@ -71,6 +71,7 @@ Util.buildLogInView = async function(){
 Util.buildSignUpView = async function(){
   let grid
   grid = '<form action="/account/signup" method="POST">'
+  grid += '<p>All fields are required</p>'
   grid += '<label for="account_firstname">First Name:</label>'
   grid += '<input type="text" id="firstname" name="account_firstname" required>'
   grid += '<label for="account_lastname">Last Name:</label>'
@@ -78,9 +79,10 @@ Util.buildSignUpView = async function(){
   grid += '<label for="account_email">Email Address:</label>'
   grid += '<input type="email" id="email" name="account_email" required>'
   grid += '<label for="account_password">Password:</label>'
+  grid += '<span>Passwords must be at least 12 characters and contain at least 1 number, 1 capital letter and 1 special character</span>'
   grid += '<input type="password" id="password" name="account_password" required>'
   grid += '<span id="pswdBtn">Show Password</span>'
-  grid += '<button type="submit">Sign Up</button>'
+  grid += '<button id="submit-password" type="submit">Sign Up</button>'
   grid += '</form>'
   return grid
 }

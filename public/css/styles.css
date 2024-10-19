@@ -199,8 +199,21 @@ button:hover,  #pswdBtn:hover {
 
 .notice {
   display: grid;
-  list-style-type: none;
+  list-style-type: circle; 
   place-content: center;
+  color: red;
+}
+
+input:required:invalid, input:focus:invalid {
+  background-color: rgb(255, 178, 178);
+}
+
+input:required:valid {
+  background-color: rgb(178, 255, 208);
+ }
+
+form p {
+  margin-bottom: 2rem;
 }
 
 @media (max-width: 36.875rem) {
