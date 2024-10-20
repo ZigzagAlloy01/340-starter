@@ -42,6 +42,7 @@ app.use(session({
 app.use(require('connect-flash')())
 app.use(function(req, res, next) {
   res.locals.messages = require('express-messages')(req, res);
+  res.locals.flash = req.flash()
   next()
 })
 

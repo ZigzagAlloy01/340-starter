@@ -52,25 +52,28 @@ validate.registationRules = () => {
 
   validate.checkRegData = async (req, res, next) => {
     let errors = []
-    errors = validationResult(req); // Retrieve validation errors
+    errors = validationResult(req);
   
     if (!errors.isEmpty()) {
-      // There are errors in the form submission
-      const grid_2 = await utilities.buildSignUpView()
+      const classificationList = await utilities.buildClassificationList();
       let nav = await utilities.getNav();
-      res.render("account/signup", {
-        errors, 
-        title: "Sign up",
+      return res.render("inventory/add-inventory", {
+        title: "Add Inventory",
         nav,
-        account_firstname: req.body.account_firstname,
-        account_lastname: req.body.account_lastname,
-        account_email: req.body.account_email,
-        grid_2,
+        errors: errors.array(),
+        inv_make: req.body.inv_make,
+        inv_model: req.body.inv_model,
+        inv_year: req.body.inv_year,
+        inv_description: req.body.inv_description,
+        inv_price: req.body.inv_price,
+        inv_miles: req.body.inv_miles,
+        inv_color: req.body.inv_color,
+        inv_image: req.body.inv_image,
+        inv_thumbnail: req.body.inv_thumbnail,
+        classificationList,
       });
-      return; // Stop further execution
     }
   
-    // Proceed to next middleware if validation passes
     next();
   };
   
