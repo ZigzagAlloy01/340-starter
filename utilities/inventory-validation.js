@@ -1,7 +1,6 @@
-const { body, validationResult } = require("express-validator");
-const utilities = require(".");
-
-const validate = {};
+const utilities = require(".")
+const { body, validationResult } = require("express-validator")
+const validate = {}
 
 /* ************************************
  * Inventory Data Validation Rules
@@ -25,7 +24,6 @@ validate.inventoryRules = () => {
     // Vehicle Year (inv_year) is required and must be a 4-digit number
     body("inv_year")
       .trim()
-      .escape()
       .notEmpty()
       .isLength({ min: 4, max: 4 })
       .withMessage("Vehicle Year must be a 4-digit number.")
@@ -42,7 +40,6 @@ validate.inventoryRules = () => {
     // Vehicle Price (inv_price) is required and must be a positive number
     body("inv_price")
       .trim()
-      .escape()
       .notEmpty()
       .isNumeric()
       .withMessage("Price must be a valid number.")
@@ -56,7 +53,6 @@ validate.inventoryRules = () => {
     // Vehicle Mileage (inv_miles) is required and must be a positive number
     body("inv_miles")
       .trim()
-      .escape()
       .notEmpty()
       .isNumeric()
       .withMessage("Mileage must be a valid number.")
@@ -89,18 +85,22 @@ validate.inventoryRules = () => {
       .withMessage("Thumbnail Path is required."),
     
     body("classification_name")
+      .trim()
+      .escape()
       .notEmpty()
+      .isNumeric()
       .withMessage("Classification is required."),
   ];
 };
 
-validate.checkInventoryData = async (req, res, next) => {
-  const errors = validationResult(req);
+validate.checkInventoryData = async (req, res) => {
+  let errors = []
+  errors = validationResult(req)
 
   if (!errors.isEmpty()) {
     const classificationList = await utilities.buildClassificationList(); 
     let nav = await utilities.getNav();
-    res.render("inventory/add-inventory", {
+    return res.render("inventory/add-inventory", {
       title: "Add Inventory",
       nav,
       errors: errors.array(), 
@@ -115,10 +115,7 @@ validate.checkInventoryData = async (req, res, next) => {
       inv_thumbnail: req.body.inv_thumbnail,
       classificationList,
     });
-    return; 
   }
-
-  next();
-};
+} 
 
 module.exports = validate;

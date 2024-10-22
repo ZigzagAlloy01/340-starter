@@ -5,11 +5,19 @@ const Util = {}
  * Constructs the nav HTML unordered list
  ************************** */
 Util.getNav = async function (req, res, next) {
-  let data = await invModel.getClassifications()
-  let list = "<ul>"
-  list += '<li><a href="/" title="Home page">Home</a></li>'
+  let data = await invModel.getClassifications();
+  
+  // Check if data is defined and has rows
+  if (!data || !data.rows) {
+    console.error("No classifications found.");
+    return "<ul><li>No classifications available.</li></ul>";
+  }
+
+  let list = "<ul>";
+  list += '<li><a href="/" title="Home page">Home</a></li>';
+  
   data.rows.forEach((row) => {
-    list += "<li>"
+    list += "<li>";
     list +=
       '<a href="/inv/type/' +
       row.classification_id +
@@ -17,41 +25,34 @@ Util.getNav = async function (req, res, next) {
       row.classification_name +
       ' vehicles">' +
       row.classification_name +
-      "</a>"
-    list += "</li>"
-  })  
-  list += "</ul>"
-  return list
+      "</a>";
+    list += "</li>";
+  });  
+  list += "</ul>";
+  return list;
 }
 
-Util.buildClassificationGrid = async function(data){
-  let grid
-  if(data.length > 0){
-    grid = '<ul id="inv-display">'
+Util.buildClassificationGrid = async function(data) {
+  let grid = '';
+  if (data && data.length > 0) {
+    grid = '<ul id="inv-display">';
     data.forEach(vehicle => { 
-      grid += '<li>'
-      grid +=  '<a href="/inv/detail/'+ vehicle.inv_id 
-      + '" title="View ' + vehicle.inv_make + ' '+ vehicle.inv_model 
-      + 'details"><img src="/public' + vehicle.inv_thumbnail 
-      +'" alt="Image of '+ vehicle.inv_make + ' ' + vehicle.inv_model 
-      +' on CSE Motors" /></a>'
-      grid += '<div class="namePrice">'
-      grid += '<hr />'
-      grid += '<h2>'
-      grid += '<a href="/inv/detail/' + vehicle.inv_id +'" title="View ' 
-      + vehicle.inv_make + ' ' + vehicle.inv_model + ' details">' 
-      + vehicle.inv_make + ' ' + vehicle.inv_model + '</a>'
-      grid += '</h2>'
-      grid += '<span>$' 
-      + new Intl.NumberFormat('en-US').format(vehicle.inv_price) + '</span>'
-      grid += '</div>'
-      grid += '</li>'
-    })
-    grid += '</ul>'
+      grid += '<li>';
+      grid += '<a href="/inv/detail/'+ vehicle.inv_id + '" title="View ' + vehicle.inv_make + ' ' + vehicle.inv_model + ' details"><img src="/public' + vehicle.inv_thumbnail + '" alt="Image of '+ vehicle.inv_make + ' ' + vehicle.inv_model +' on CSE Motors" /></a>';
+      grid += '<div class="namePrice">';
+      grid += '<hr />';
+      grid += '<h2>';
+      grid += '<a href="/inv/detail/' + vehicle.inv_id +'" title="View ' + vehicle.inv_make + ' ' + vehicle.inv_model + ' details">' + vehicle.inv_make + ' ' + vehicle.inv_model + '</a>';
+      grid += '</h2>';
+      grid += '<span>$' + new Intl.NumberFormat('en-US').format(vehicle.inv_price) + '</span>';
+      grid += '</div>';
+      grid += '</li>';
+    });
+    grid += '</ul>';
   } else { 
-    grid += '<p class="notice">Sorry, no matching vehicles could be found.</p>'
+    grid += '<p class="notice">Sorry, no matching vehicles could be found.</p>';
   }
-  return grid
+  return grid;
 }
 
 Util.buildLogInView = async function(){
@@ -108,24 +109,28 @@ Util.buildVehicleDetail = async function(vehicle) {
 };
 
 Util.buildClassificationList = async function (classification_id = null) {
-  let data = await invModel.getClassifications()
+  let data = await invModel.getClassifications();
   let classificationList =
-    '<select name="classification_id" id="classificationList" required>'
-  classificationList += "<option value=''>Choose a Classification</option>"
+    '<select name="classification_id" id="classificationList" required>';
+  classificationList += "<option value=''>Choose a Classification</option>";
+  
+  // Check if data is defined and has rows
+  if (!data || !data.rows) {
+    console.error("No classifications found for dropdown.");
+    return classificationList + "</select>"; // Return the dropdown with only the default option
+  }
+
   data.rows.forEach((row) => {
-    classificationList += '<option value="' + row.classification_id + '"'
-    if (
-      classification_id != null &&
-      row.classification_id == classification_id
-    ) {
-      classificationList += " selected "
+    classificationList += '<option value="' + row.classification_id + '"';
+    if (classification_id != null && row.classification_id == classification_id) {
+      classificationList += " selected ";
     }
-    classificationList += ">" + row.classification_name + "</option>"
-  })
-  classificationList += "</select>"
-  return classificationList
+    classificationList += ">" + row.classification_name + "</option>";
+  });
+  classificationList += "</select>";
+  return classificationList;
 }
 
-Util.handleErrors = fn => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next)
+Util.handleErrors = fn => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next);
 
-module.exports = Util
+module.exports = Util;

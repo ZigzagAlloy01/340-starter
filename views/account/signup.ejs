@@ -6,13 +6,14 @@
 
 <%- messages() %>
 
-<% if (errors && errors.array().length > 0) { %>
+<% if (errors && errors.array && errors.array().length > 0) { %>
   <ul class="notice">
     <% errors.array().forEach(error => { %>
       <li><%= error.msg %></li>
     <% }) %>
   </ul>
 <% } %>
+
 
 <%- grid_2 %>
 

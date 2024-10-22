@@ -25,7 +25,6 @@ async function buildSignup(req, res) {
 async function registerAccount(req, res) {
 
   const { account_firstname, account_lastname, account_email, account_password } = req.body
-  const grid_1 = await utilities.buildLogInView()
   let nav = await utilities.getNav()
 
   const regResult = await accountModel.registerAccount(
@@ -36,6 +35,7 @@ async function registerAccount(req, res) {
   )
 
   if (regResult) {
+    const grid_1 = await utilities.buildLogInView()
     req.flash(
       "notice",
       `Congratulations, you're registered ${account_firstname}. Please log in.`

@@ -18,9 +18,7 @@ router.get('/add-inventory', invController.renderAddInventoryView);
 
 router.post(
     "/inventory",
-    regValidate.inventoryRules(),
-    regValidate.checkInventoryData(),
-    utilities.handleErrors(invController.addInventoryItem)
+    invController.addInventoryItem
   )
 
 module.exports = router

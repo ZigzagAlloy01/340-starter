@@ -52,29 +52,23 @@ validate.registationRules = () => {
 
   validate.checkRegData = async (req, res, next) => {
     let errors = []
-    errors = validationResult(req);
-  
+    errors = validationResult(req)
+
     if (!errors.isEmpty()) {
-      const classificationList = await utilities.buildClassificationList();
-      let nav = await utilities.getNav();
-      return res.render("inventory/add-inventory", {
-        title: "Add Inventory",
+      const grid_2 = await utilities.buildSignUpView()
+      let nav = await utilities.getNav()
+      return res.render("account/signup", { // Render the signup view if there are errors
+        title: "Sign Up",
         nav,
-        errors: errors.array(),
-        inv_make: req.body.inv_make,
-        inv_model: req.body.inv_model,
-        inv_year: req.body.inv_year,
-        inv_description: req.body.inv_description,
-        inv_price: req.body.inv_price,
-        inv_miles: req.body.inv_miles,
-        inv_color: req.body.inv_color,
-        inv_image: req.body.inv_image,
-        inv_thumbnail: req.body.inv_thumbnail,
-        classificationList,
-      });
+        errors: errors.array(),   // Pass the errors array to the view
+        account_firstname: req.body.account_firstname, // Preserve the entered data
+        account_lastname: req.body.account_lastname,
+        account_email: req.body.account_email,
+        grid_2,
+      })
     }
   
-    next();
-  };
+    next()
+}
   
   module.exports = validate
