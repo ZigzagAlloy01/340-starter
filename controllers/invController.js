@@ -3,6 +3,7 @@ const invModel = require("../models/inventory-model")
 
 async function buildManagementView(req, res) {
   let nav = await utilities.getNav()
+  
   res.render("inventory/management", {
     title: "Inventory Management",
     nav,
