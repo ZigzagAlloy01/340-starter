@@ -20,7 +20,7 @@
 
     <h1>Edit a Vehicle From The Inventory</h1>
 
-    <form action="/inv/update" method="POST" onsubmit="return validateForm();">
+    <form id="updateForm" action="/inv/update" method="POST" onsubmit="return validateForm();">
         <label for="inv_make">Vehicle Name (Make):</label>
         <input type="text" id="inv_make" name="inv_make" value="<%= inv_make || '' %>" required>
     
@@ -51,7 +51,10 @@
         <label for="inv_thumbnail">Thumbnail Path:</label>
         <input type="text" id="inv_thumbnail" name="inv_thumbnail" value="<%= inv_thumbnail || 'path/to/no-image-thumbnail.jpg' %>" required>
     
-        <button type="submit">Update Vehicle</button>
+        <button type="submit" disabled>Update Vehicle</button>
+        <input type="hidden" name="inv_id"
+            <% if(locals.inv_id) { %> value="<%= locals.inv_id %>"
+            <% } %>>
     </form>
-    
+    <script src="../../public/js/inv-update.js"></script>
 </body>

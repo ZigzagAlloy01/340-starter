@@ -12,7 +12,16 @@ async function buildManagementView(req, res) {
 }
 
 async function buildByClassificationId(req, res) {
-  const classification_id = req.params.classificationId
+  const classificationIdParam = req.params.classificationId;
+  console.log('Classification ID param:', classificationIdParam); // Log this
+  const classification_id = parseInt(classificationIdParam, 10);
+  if (isNaN(classification_id)) {
+    return res.status(400).render("error", {
+      title: "Invalid Classification ID",
+      nav: await utilities.getNav(),
+      message: "The classification ID provided is not valid."
+    });
+  }
   const data = await invModel.getInventoryByClassificationId(classification_id)
   const grid = await utilities.buildClassificationGrid(data)
   let nav = await utilities.getNav()
@@ -159,11 +168,19 @@ async function getInventoryJSON(req, res, next) {
  *  Build edit inventory view
  * ************************** */
 async function editInventoryView(req, res) {
-  const inv_id = parseInt(req.params.inv_id)
+  const inv_id = parseInt(req.params.inventory_id)
+  if (isNaN(inv_id)) {
+    return res.status(400).render("error", {
+      title: "Invalid Classification ID",
+      nav: await utilities.getNav(),
+      message: "The classification ID provided is not valid."
+    });
+  }
   let nav = await utilities.getNav()
-  const itemData = await invModel.getInventoryById(inv_id)
+  const itemData = await invModel.getVehicleById(inv_id)
   const classificationSelect = await utilities.buildClassificationList(itemData.classification_id)
   const itemName = `${itemData.inv_make} ${itemData.inv_model}`
+  const classificationList = await utilities.buildClassificationList()
   res.render("./inventory/edit-inventory", {
     title: "Edit " + itemName,
     nav,
@@ -179,8 +196,69 @@ async function editInventoryView(req, res) {
     inv_price: itemData.inv_price,
     inv_miles: itemData.inv_miles,
     inv_color: itemData.inv_color,
-    classification_id: itemData.classification_id
+    classification_id: itemData.classification_id,
+    classificationList
   })
+}
+
+/* ***************************
+ *  Update Inventory Data
+ * ************************** */
+async function updateInventory(req, res, next) {
+  let nav = await utilities.getNav()
+  const {
+    inv_id,
+    inv_make,
+    inv_model,
+    inv_description,
+    inv_image,
+    inv_thumbnail,
+    inv_price,
+    inv_year,
+    inv_miles,
+    inv_color,
+    classification_id,
+  } = req.body
+  const updateResult = await invModel.updateInventory(
+    inv_id,  
+    inv_make,
+    inv_model,
+    inv_description,
+    inv_image,
+    inv_thumbnail,
+    inv_price,
+    inv_year,
+    inv_miles,
+    inv_color,
+    classification_id
+  )
+
+  if (updateResult) {
+    const itemName = updateResult.inv_make + " " + updateResult.inv_model
+    req.flash("notice", `The ${itemName} was successfully updated.`)
+    res.redirect("/inv/")
+  } else {
+    const classificationSelect = await utilities.buildClassificationList(classification_id)
+    const itemName = `${inv_make} ${inv_model}`
+    req.flash("notice", "Sorry, the insert failed.")
+    res.status(501).render("inventory/edit-inventory", {
+    title: "Edit " + itemName,
+    nav,
+    classificationSelect: classificationSelect,
+    errors: null,
+    inv_id,
+    inv_make,
+    inv_model,
+    inv_year,
+    inv_description,
+    inv_image,
+    inv_thumbnail,
+    inv_price,
+    inv_miles,
+    inv_color,
+    classification_id
+    })
+  }
 }
 
 module.exports = {
@@ -192,5 +270,6 @@ module.exports = {
   renderAddInventoryView,
   addInventoryItem,
   getInventoryJSON,
-  editInventoryView
+  editInventoryView,
+  updateInventory
 }

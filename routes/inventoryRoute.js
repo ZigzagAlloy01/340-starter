@@ -12,6 +12,8 @@ router.get("/detail/:vehicleId", invController.getVehicleById)
 
 router.get("/", invController.buildManagementView)
 
+router.post("/update/", invController.updateInventory)
+
 router.get('/add-classification', invController.renderAddClassificationView);
 
 router.get("/getInventory/:classification_id", utilities.handleErrors(invController.getInventoryJSON))
