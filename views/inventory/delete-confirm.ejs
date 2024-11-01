@@ -1,0 +1,44 @@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete Inventory</title>
+    <link rel="stylesheet" href="/public/css/styles.css">
+    <script>
+        function validateForm() {
+            const requiredFields = document.querySelectorAll('[required]');
+            for (let field of requiredFields) {
+                if (!field.value) {
+                    alert(field.name + " is required.");
+                    return false;
+                }
+            }
+            return true;
+        }
+    </script>
+</head>
+<body>
+
+    <h1>Delete a Vehicle From The Inventory</h1>
+
+    <form id="updateForm" action="/inv/delete" method="POST" onsubmit="return validateForm();">
+        <label for="inv_make">Vehicle Name (Make):</label>
+        <input type="text" id="inv_make" name="inv_make" value="<%= inv_make || '' %>" required>
+    
+        <label for="inv_model">Vehicle Model:</label>
+        <input type="text" id="inv_model" name="inv_model" value="<%= inv_model || '' %>" required>
+    
+        <label for="inv_year">Vehicle Year:</label>
+        <input type="text" id="inv_year" name="inv_year" maxlength="4" value="<%= inv_year || '' %>" required>
+    
+        <label for="inv_price">Price:</label>
+        <input type="number" id="inv_price" name="inv_price" value="<%= inv_price || '' %>" required>
+
+        <p>Confirm Deletion - The delete is permanent.</p>
+
+        <button type="submit">Delete Vehicle</button>
+        <input type="hidden" name="inv_id"
+            <% if(locals.inv_id) { %> value="<%= locals.inv_id %>"
+            <% } %>>
+    </form>
+    <script src="../../public/js/inv-update.js"></script>
+</body>

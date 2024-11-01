@@ -18,7 +18,6 @@ async function buildByClassificationId(req, res) {
   if (isNaN(classification_id)) {
     return res.status(400).render("error", {
       title: "Invalid Classification ID",
-      nav: await utilities.getNav(),
       message: "The classification ID provided is not valid."
     });
   }
@@ -261,6 +260,70 @@ async function updateInventory(req, res, next) {
   }
 }
 
+/* ***************************
+ *  Build edit inventory view
+ * ************************** */
+async function deleteConfirmationView(req, res) {
+  const inv_id = parseInt(req.params.inventory_id)
+  if (isNaN(inv_id)) {
+    return res.status(400).render("error", {
+      title: "Invalid Classification ID",
+      nav: await utilities.getNav(),
+      message: "The classification ID provided is not valid."
+    });
+  }
+  let nav = await utilities.getNav()
+  const itemData = await invModel.getVehicleById(inv_id)
+  const itemName = `${itemData.inv_make} ${itemData.inv_model}`
+  res.render("./inventory/delete-confirm", {
+    title: "Delete " + itemName,
+    nav,
+    errors: null,
+    inv_id: itemData.inv_id,
+    inv_make: itemData.inv_make,
+    inv_model: itemData.inv_model,
+    inv_year: itemData.inv_year,
+    inv_price: itemData.inv_price,
+    /*classification_id: itemData.classification_id*/
+  })
+}
+
+/* ***************************
+ *  Update Inventory Data
+ * ************************** */
+async function deleteInventoryView(req, res, next) {
+  let nav = await utilities.getNav()
+  const {
+    inv_id,
+    inv_make,
+    inv_model,
+    inv_price,
+    inv_year,
+  } = req.body
+  const updateResult = await invModel.deleteInventory(
+    inv_id,  
+  )
+
+  if (updateResult) {
+    const itemName = updateResult.inv_make + " " + updateResult.inv_model
+    req.flash("notice", `The ${itemName} was successfully deleted.`)
+    res.redirect("/inv/")
+  } else {
+    const itemName = `${inv_make} ${inv_model}`
+    req.flash("notice", "Sorry, the insert failed.")
+    res.status(501).render("inventory/delete-inventory", {
+    title: "Delete " + itemName,
+    nav,
+    errors: null,
+    inv_id,
+    inv_make,
+    inv_model,
+    inv_year,
+    inv_price,
+    })
+  }
+}
+
 module.exports = {
   buildManagementView,
   buildByClassificationId,
@@ -271,5 +334,7 @@ module.exports = {
   addInventoryItem,
   getInventoryJSON,
   editInventoryView,
-  updateInventory
+  updateInventory,
+  deleteConfirmationView,
+  deleteInventoryView
 }

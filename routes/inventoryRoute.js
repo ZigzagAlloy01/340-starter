@@ -8,6 +8,10 @@ router.get("/type/:classificationId", invController.buildByClassificationId)
 
 router.get('/edit/:inventory_id', invController.editInventoryView)
 
+router.get('/delete/:inventory_id', invController.deleteConfirmationView)
+
+router.post('/delete', invController.deleteInventoryView)
+
 router.get("/detail/:vehicleId", invController.getVehicleById)
 
 router.get("/", invController.buildManagementView)
