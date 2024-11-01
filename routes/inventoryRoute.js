@@ -6,11 +6,15 @@ const utilities = require("../utilities/")
 
 router.get("/type/:classificationId", invController.buildByClassificationId)
 
+router.get('/edit/:inventory_id', invController.editInventoryView)
+
 router.get("/detail/:vehicleId", invController.getVehicleById)
 
 router.get("/", invController.buildManagementView)
 
 router.get('/add-classification', invController.renderAddClassificationView);
+
+router.get("/getInventory/:classification_id", utilities.handleErrors(invController.getInventoryJSON))
 
 router.post('/classification', invController.addClassification);
 
