@@ -43,6 +43,9 @@ app.use(session({
   name: 'sessionId',
 }))
 
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
+
 // Express Messages Middleware
 app.use(require('connect-flash')())
 app.use(function(req, res, next) {

@@ -12,14 +12,14 @@ async function buildManagementView(req, res) {
 }
 
 async function buildByClassificationId(req, res) {
-  const classificationIdParam = req.params.classificationId;
-  console.log('Classification ID param:', classificationIdParam); // Log this
-  const classification_id = parseInt(classificationIdParam, 10);
+  const classificationIdParam = req.params.classificationId
+  console.log('Classification ID param:', classificationIdParam) // Log this
+  const classification_id = parseInt(classificationIdParam, 10)
   if (isNaN(classification_id)) {
     return res.status(400).render("error", {
       title: "Invalid Classification ID",
       message: "The classification ID provided is not valid."
-    });
+    })
   }
   const data = await invModel.getInventoryByClassificationId(classification_id)
   const grid = await utilities.buildClassificationGrid(data)
@@ -118,16 +118,16 @@ async function renderAddInventoryView(req, res) {
 }
 
 async function addInventoryItem(req, res) {
-  const { inv_make } = req.body;
-  const { inv_model } = req.body;
-  const { inv_year } = req.body;
-  const { inv_description } = req.body;
-  const { inv_image } = req.body;
-  const { inv_thumbnail } = req.body;
-  const { inv_price } = req.body;
-  const { inv_miles } = req.body;
-  const { inv_color } = req.body;
-  const { classification_id } = req.body;
+  const { inv_make } = req.body
+  const { inv_model } = req.body
+  const { inv_year } = req.body
+  const { inv_description } = req.body
+  const { inv_image } = req.body
+  const { inv_thumbnail } = req.body
+  const { inv_price } = req.body
+  const { inv_miles } = req.body
+  const { inv_color } = req.body
+  const { classification_id } = req.body
 
   try {
       const inventoryItem = await invModel.addInventoryItem(
@@ -141,10 +141,10 @@ async function addInventoryItem(req, res) {
           inv_miles,
           inv_color,
           classification_id
-      );
+      )
 
-      req.flash("message", "Vehicle added successfully!");
-      res.redirect("/inv/");
+      req.flash("message", "Vehicle added successfully!")
+      res.redirect("/inv/")
   } catch (error) {
       res.redirect("/inv/")
   }
@@ -173,7 +173,7 @@ async function editInventoryView(req, res) {
       title: "Invalid Classification ID",
       nav: await utilities.getNav(),
       message: "The classification ID provided is not valid."
-    });
+    })
   }
   let nav = await utilities.getNav()
   const itemData = await invModel.getVehicleById(inv_id)
@@ -270,12 +270,12 @@ async function deleteConfirmationView(req, res) {
       title: "Invalid Classification ID",
       nav: await utilities.getNav(),
       message: "The classification ID provided is not valid."
-    });
+    })
   }
   let nav = await utilities.getNav()
   const itemData = await invModel.getVehicleById(inv_id)
   const itemName = `${itemData.inv_make} ${itemData.inv_model}`
-  res.render("./inventory/delete-confirm", {
+  res.render("inventory/delete-confirm", {
     title: "Delete " + itemName,
     nav,
     errors: null,
@@ -324,6 +324,46 @@ async function deleteInventoryView(req, res, next) {
   }
 }
 
+async function searchInventory(req, res) {
+  if (!req.query.term) {
+      return res.render('inventory/searchResults', {
+          title: "Search in the Inventory",
+          results: [],
+          message: "Please enter a search term.",
+          nav: await utilities.getNav()
+      });
+  }
+
+  const searchTerm = req.query.term;
+  console.log('Search term received:', searchTerm);
+
+  const validation = utilities.validateSearchTerm(searchTerm);
+  if (!validation.valid) {
+      return res.render('inventory/searchResults', {
+          title: "Search in the Inventory",
+          results: [],
+          message: validation.error,
+          nav: await utilities.getNav()
+      });
+  }
+
+  try {
+      const results = await invModel.searchInventory(searchTerm);
+      console.log('Search results:', results);
+      const grid = await utilities.buildVehicleDetail(results)
+      const className = results.inv_model
+        res.render("./inventory/detail", {
+          title: `${className} vehicles`,
+          nav: await utilities.getNav(),
+          grid
+        })
+  } catch (error) {
+      console.error("Search error:", error);
+      utilities.handleError(error, res);
+  }
+}
+
+
 module.exports = {
   buildManagementView,
   buildByClassificationId,
@@ -336,5 +376,6 @@ module.exports = {
   editInventoryView,
   updateInventory,
   deleteConfirmationView,
-  deleteInventoryView
+  deleteInventoryView,
+  searchInventory
 }

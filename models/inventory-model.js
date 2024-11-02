@@ -127,6 +127,19 @@ async function updateInventory(
   }
 }
 
+async function searchInventory(searchTerm) {
+  const sql = `
+    SELECT * FROM public.inventory 
+    WHERE inv_make = $1 OR inv_model = $1 OR inv_year::text = $1
+    ORDER BY inv_make, inv_model, inv_year`;
+  try {
+    const data = await pool.query(sql, [searchTerm]);
+    return data.rows.length > 0 ? data.rows[0] : null
+  } catch (error) {
+    console.error("Error in searchInventory: " + error);
+    throw error;
+  }
+}
 
 module.exports = {
   getClassifications,
@@ -135,5 +148,6 @@ module.exports = {
   addClassification,
   addInventoryItem,
   updateInventory,
-  deleteInventory
+  deleteInventory,
+  searchInventory
 }
